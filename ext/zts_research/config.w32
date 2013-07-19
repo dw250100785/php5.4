@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("zts_research", "for zts_research support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("zts_research", "enable zts_research support", "no");
+
+if (PHP_ZTS_RESEARCH != "no") {
+	EXTENSION("zts_research", "zts_research.c");
+}
+

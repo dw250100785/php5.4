@@ -1,0 +1,11 @@
+PHP-FPM 配置
+
+1.  php-fpm是什么
+    全称是php fastcig process manager即php fastcgi进程管理器，相比fastcgi静态的唤起cgi， fpm能根据访问的压力动态的唤起cgi进程和销毁以达到动态的调度cgi数量， 这样可以有效的使用内存。 除此之外还有其他的一些优点，比如,fpm还可以平滑的重载php配置；由于fpm是使用Unix-Socket来和服务器通讯，所以也不用再配置cgi端口；fpm有更好的状态输出和slowlog日志，502的时候能给出更多的细节错误。
+
+2.  php-fpm配置
+    从php5.3.3版本开始就已经集成了fpm，不再是第三方的包了， 如果使用的是php5.3.3以前的版本就得自己去安装fpm包了，对于php5.2.x的版本，fpm的配置文件还是xml格式，php5.3.x开始fpm配置文件就已经支持ini格式了。
+3.  配置参数介绍
+    在配置文件php-fpm.conf中所有的相对路径都是相对于php的安装路径前缀的。 当然这个前缀可以通过命令行中的-p参数动态的改变。
+
+    1) include : 包含一个或多个文件。如果glob(3)存在， 该指令用于包含

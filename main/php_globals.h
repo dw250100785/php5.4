@@ -25,7 +25,7 @@
 
 typedef struct _php_core_globals php_core_globals;
 
-#ifdef ZTS
+#ifdef ZTS //PHP Globals
 # define PG(v) TSRMG(core_globals_id, php_core_globals *, v)
 extern PHPAPI int core_globals_id;
 #else

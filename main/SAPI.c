@@ -428,10 +428,16 @@ SAPI_API void sapi_activate_headers_only(TSRMLS_D)
 
 /*
  * Called from php_request_startup() for every request.
+ * 1) SAPI Globals初始化
+ * 2) 处理请求方法(如果SG(server_context)设置了的)
+ * 3) 输入过滤初始化(如果sapi_module的input_filter_init有设置的时候)
+ *     
+ *    从 if (SG(server_context)) { ... } 大致可以看出CLI SAPI是没有处理请求方法的
  */
 
 SAPI_API void sapi_activate(TSRMLS_D)
 {
+        // 初始化全局变量sapi_headers的headers， 这个是列表的初始化，参数分别是要初始化的列表指针， 尺寸大小， 析构方法指针， 是否持久
 	zend_llist_init(&SG(sapi_headers).headers, sizeof(sapi_header_struct), (void (*)(void *)) sapi_free_header, 0);
 	SG(sapi_headers).send_default_content_type = 1;
 
@@ -676,14 +682,14 @@ SAPI_API int sapi_header_op(sapi_header_op_enum op, void *arg TSRMLS_DC)
 	uint header_line_len;
 	int http_response_code;
 
-	if (SG(headers_sent) && !SG(request_info).no_headers) {
+	if (SG(headers_sent) && !SG(request_info).no_headers) { // header发送之前不能有任何输出, header发送过程中， 不能再修改header
 		const char *output_start_filename = php_output_get_start_filename(TSRMLS_C);
 		int output_start_lineno = php_output_get_start_lineno(TSRMLS_C);
 
-		if (output_start_filename) {
+		if (output_start_filename) { // 已经有输出， 不能再修改header
 			sapi_module.sapi_error(E_WARNING, "Cannot modify header information - headers already sent by (output started at %s:%d)",
 				output_start_filename, output_start_lineno);
-		} else {
+		} else { // headers已经发送， 不能再修改header信息
 			sapi_module.sapi_error(E_WARNING, "Cannot modify header information - headers already sent");
 		}
 		return FAILURE;

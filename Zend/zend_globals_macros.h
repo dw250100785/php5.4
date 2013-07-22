@@ -41,7 +41,7 @@ int zendparse(void);
 
 
 /* Executor */
-#ifdef ZTS
+#ifdef ZTS   // EG(v) Executor Globals
 # define EG(v) TSRMG(executor_globals_id, zend_executor_globals *, v)
 #else
 # define EG(v) (executor_globals.v)
